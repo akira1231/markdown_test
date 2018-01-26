@@ -3,6 +3,7 @@ Appearance test for Markdown
 
 minSdkVersionを9以上にする[1](#1)
 
+
 ```xml
     <?xml version="1.0" encoding="utf-8"?>
     <manifest ...>
