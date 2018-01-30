@@ -1,7 +1,7 @@
 # markdown_test
 Appearance test for Markdown
 
->>> minSdkVersionを9以上にする[1](#1)
+> minSdkVersionを9以上にする[1](#1)
 
 
 ```xml
