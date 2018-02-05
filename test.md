@@ -170,7 +170,7 @@ Lintは`<path-permission>`のパス指定(`pathPrefix`など)の設定値につ�
 
 問題を検出した場合、Lintは次のような警告を出力します。
 
--   Lint結果(Warning)
+-   Lint結果(Warning)  
 Exported content providers can provide access to potentially sensitive data 
 
 ### `<path-permmision>`タグにPermissionの保護がない(Lint検出：対象外)
