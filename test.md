@@ -200,7 +200,7 @@ dangerous"と指摘するので注意してください。
        </provider>
 ```
 
-Lintは`<path-permission>`タグで`<android:permission>`は無効であると誤って判断しています。これについては「Invalid Permission Attribute (InvalidPermission)」の項を参照してください。
+Lintは`<path-permission>`タグで`<android:permission>`は無効であると誤って判断しています。これについては「[Invalid Permission Attribute (InvalidPermission)][test2]」の項を参照してください。
 
 ## 外部リンク
 
@@ -210,6 +210,8 @@ Lintは`<path-permission>`タグで`<android:permission>`は無効であると�
 -   [Androidアプリのセキュア設計・セキュアコーディングガイド][1]  
     -   「4.3 Content Providerを作る・利用する」にContent Providerを安全に使用するための指針や実装例が解説されています
     -   「5.2 PermissionとProtection Level」にPermissionの適切な使用方法の解説があります
+
+[test2]: test2.md
 
 [1]: https://developer.android.com/reference/android/content/ContentProvider.html
 [2]: https://developer.android.com/guide/topics/providers/content-providers.html
