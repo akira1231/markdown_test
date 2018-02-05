@@ -13,18 +13,16 @@ ContentProviderへのアクセス制御が十分に施されていないため�
 
 ### ContentProviderを非公開にする
 
-仕様・設計上問題なければContentProviderを非公開にします。Android 2.2(API
-8)以前の端末ではContentProviderを非公開にできないため、Android 2.2(API
-8)以前の端末を非サポートにする(minSdkVersionを9以上にする)ことを前提とします。
+仕様・設計上問題なければContentProviderを非公開にします。Android 2.2(API 8)以前の端末ではContentProviderを非公開にできないため、Android 2.2(API 8)以前の端末を非サポートにする(`minSdkVersion`を9以上にする)ことを前提とします。
 
 下に示す例のように`<provider>`で`android:exported`属性を`false`にし、ContentProviderを非公開に設定することで、不特定多数のアプリからのアクセスを不許可にできます。  
-targetSdkVersionが16以前か17以降かによって、@android:exported@属性のデフォルト値が異なりますので、公開・非公開に関わらず明示的に設定してください。
+targetSdkVersionが16以前か17以降かによって、`android:exported`属性のデフォルト値が異なりますので、公開・非公開に関わらず明示的に設定してください。
 
 > `<provider>`で`android:exported`属性が設定されていない場合の挙動は、`targetSdkVersion`によって以下のように異なります。非公開のつもりが誤って公開となるのを避け、また設計意図を明確にするために公開・非公開に関わらず明示的に設定することをお勧めします。  
 > `targetSdkVersion`が16以下の場合：`android:exported`のデフォルト値は`true`  
 > `targetSdkVersion`が17以上の場合：`android:exported`のデフォルト値は`false`
 
-```xml
+```xml:manifest.xml
     <?xml version="1.0" encoding="utf-8"?>
     <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.example"
@@ -60,12 +58,12 @@ targetSdkVersionが16以前か17以降かによって、@android:exported@属性
 以下では上で述べた、それぞれのPermissionの設定方法について例を示します。
 
 > ここではシステム定義のDangerous Permission(protecttionLevelがdangerousなPermission)を利用した例を取り上げます。第三者アプリはユーザーの許可によってPermissionを取得することが出来るため、実際の制限はユーザーの判断にゆだねられます。そのため、アクセス可能な情報はユーザー情報に限定することが必要です。
-情報のやり取りを自社アプリに限定するなどその他のケースについては、「[Androidアプリのセキュア設計・セキュアコーディングガイド](1)」(外部リンク)にある情報はContentProviderを安全に利用する方法が具体的な例とともに示されておりお勧めです。
+情報のやり取りを自社アプリに限定するなどその他のケースについては、「[Androidアプリのセキュア設計・セキュアコーディングガイド][4]」(外部リンク)にある情報はContentProviderを安全に利用する方法が具体的な例とともに示されておりお勧めです。
 
 -   単一のPermissionにより他アプリからの読み書きを制限する  
-下の例は、許可されたアプリだけがContentProviderにアクセス出来るように@WRITE\_CONTACTS@
-    Permissionで制限しています。
-        <code class="xml">
+下の例は、許可されたアプリだけがContentProviderにアクセス出来るように`WRITE_CONTACTS` Permissionで制限しています。
+
+```xml:manifest.xml
         <?xml version="1.0" encoding="utf-8"?>
         <manifest ... >
                 :
@@ -81,15 +79,14 @@ targetSdkVersionが16以前か17以降かによって、@android:exported@属性
             </application>
             :
         </manifest>
-        </code>
+```
 
-<!-- -->
-
--   読み書きそれぞれに別のPermissionを設定して制限する\
-    下の例の場合、第三者アプリは@READ\_CONTACTS@
-    Permissionを持たなければContentProviderの@query()`メソッドを呼びだすことができません。同様に`insert()`、`update()`あるいは`delete()`メソッドを呼び出すには、`WRITE\_CONTACTS@
+-   読み書きそれぞれに別のPermissionを設定して制限する  
+    下の例の場合、第三者アプリは`READ_CONTACTS`
+    Permissionを持たなければContentProviderの`query()`メソッドを呼びだすことができません。同様に`insert()`、`update()`あるいは`delete()`メソッドを呼び出すには、`WRITE\_CONTACTS`
     Permissionを持っている必要があります。
-        <code class="xml">
+
+```xml:manifest.xml
         <?xml version="1.0" encoding="utf-8"?>
         <manifest ... >
                 :
@@ -107,12 +104,12 @@ targetSdkVersionが16以前か17以降かによって、@android:exported@属性
             :
         </manifest>
         </code>
+```
 
-<!-- -->
+-   `<path-permission>`によってアクセス可能なパスを限定する  
+    `<path-permission>`を用いることによってアクセスを許可する情報の範囲を、特定のパターンにマッチするものに限定することができます。さらに各URI毎に別々のPermissionを設定することに加え、読み書き別々のPermissionを設定することも可能です。  
 
--   `<path-permission>`によってアクセス可能なパスを限定する\
-    `<path-permission>`を用いることによってアクセスを許可する情報の範囲を、特定のパターンにマッチするものに限定することができます。さらに各URI毎に別々のPermissionを設定することに加え、読み書き別々のPermissionを設定することも可能です。
-        <code class="xml">
+```xml:manifest.xml
         <?xml version="1.0" encoding="utf-8"?>
         <manifest ... >
                 :
@@ -131,17 +128,15 @@ targetSdkVersionが16以前か17以降かによって、@android:exported@属性
             </application>
             :
         </manifest>
+```
 
-    </code>
+## 不適切な例
 
-不適切な例
-----------
-
-### `<path-permission>`がすべてのパスに対するアクセスを許可する設定になっている
+### `<path-permission>`がすべてのパスに対するアクセスを許可する設定になっている(Lint検出：対象外)
 
 Lintは`<path-permission>`のパス指定(`pathPrefix`など)の設定値については特に検査しません。例えば下記のような例では、ContentProviderの持つすべてのリソースへのアクセスを許可していますが、Lintは警告メッセージを出力しません。アクセス可能なパスの指定範囲が意図と異なっていないか、仕様や設計の確認を十分に行い、誤った設定にならないよう心がけてください。
 
-    <code class="xml">
+```xml:manifest.xml
         <path-permission
             android:pathPrefix="/"
             android:permission="android.permission.READ_CONTACTS">
@@ -150,13 +145,13 @@ Lintは`<path-permission>`のパス指定(`pathPrefix`など)の設定値につ�
             android:pathPattern="/.*"
             android:permission="android.permission.WRITE_CONTACTS">
         </path-permission>
-    </code>
+```
 
-### 公開・非公開が不明瞭
+### 公開・非公開が不明瞭（Lint検出：対象)
 
 下の例では@android:exported@属性の設定はありませんが、targetSdkVersionが16以下の場合、`<provider>`タブの@android:exported@属性のデフォルト値が@true@のため検出対象になります。ただし、LintはtargetSdkVersionに関わらず、`<provider>`に@android:exported@指定がないものをtrueとして扱っています。
 
-    <code class="xml">
+```xml:manifest.xml
     <?xml version="1.0" encoding="utf-8"?>
     <manifest ...>
         :
@@ -169,30 +164,26 @@ Lintは`<path-permission>`のパス指定(`pathPrefix`など)の設定値につ�
             </provider>
         </application>
     </manifest>
-    </code>
+```
 
-\
-targetSdkVersionの違いによる振る舞いに依存せず、公開・非公開は@android:exported@属性によって明示的に設定してください。
+`targetSdkVersion`の違いによる振る舞いに依存せず、公開・非公開は`android:exported`属性によって明示的に設定してください。
 
 問題を検出した場合、Lintは次のような警告を出力します。
 
 -   Lint結果(Warning)
+Exported content providers can provide access to potentially sensitive data 
 
-<!-- -->
+### `<path-permmision>`タグにPermissionの保護がない(Lint検出：対象外)
 
-    Exported content providers can provide access to potentially sensitive data 
+`<provider>`の下位タグ`<path-permission>`でアクセス可能なパスを設定しているが、Providerと`<path-permission>`の両方でPermissionを設定していない場合実質的に任意の他のアプリからそのパスへのアクセスが可能となります。このようなケースをLintは検知せずあたかもProviderがPermissionで保護されている状況とみなします。しかし結果的に十分なアクセス制御がされている状況とはなっていないため、注意してください。
 
-### `<path-permmision>`タグをを記載しているがPermissionで守られていない(Lint検出対象外)
-
-Providerの下位タグ`<path-permission>`でアクセス可能なパスを設定しているが、Providerと`<path-permission>`の両方でPermissionを設定していない場合実質的に任意の他のアプリからそのパスへのアクセスが可能となります。このようなケースをLintは検知せずあたかもProviderがPermissionで保護されている状況とみなします。しかし結果的に十分なアクセス制御がされている状況とはなっていないため、注意してください。
-
-    <code class="xml">
+```xml:manifest.xml
       <provider android:name=".MyProvider"
                 android:authorities="downloads"
                 android:exported="true">
            <path-permission android:pathPrefix="/all_downloads" />
        </provider>
-    </code>
+```
 
 ### (注意) `<path-permission>`でPermissionを設定するとLintは誤って問題ありと指摘します
 
@@ -200,41 +191,27 @@ Providerの下位タグ`<path-permission>`でアクセス可能なパスを設�
 an unsupported element with a permission is a non-op and potentially
 dangerous"と指摘するので注意してください。
 
-    <code class="xml">
+```xml:manifest.xml
        <provider android:name=".MyProvider"
                  android:authorities="downloads" android:exported="true">
             <!-- path-permissionでandroid:permission属性は有効にもかかわらずLintは問題ありとする -->
             <path-permission android:pathPrefix="/all_downloads"
                 android:permission="android.permission.ACCESS_ALL_DOWNLOADS"/>
        </provider>
-    </code>
+```
 
-\
-Lintは`<path-permission>`タグで`<android:permission>`は無効であると誤って判断しています。これについては「Invalid
-Permission Attribute (InvalidPermission)」の項を参照してください。
+Lintは`<path-permission>`タグで`<android:permission>`は無効であると誤って判断しています。これについては「Invalid Permission Attribute (InvalidPermission)」の項を参照してください。
 
-外部リンク
-----------
+## 外部リンク
 
--   Content Provider \| Android Developers\
-    https://developer.android.com/reference/android/content/ContentProvider.html
-
-<!-- -->
-
--   Content Providerのガイド\
-    https://developer.android.com/guide/topics/providers/content-providers.html
-
-<!-- -->
-
--   `<path-permission>` \| Android Developers\
-    https://developer.android.com/guide/topics/manifest/path-permission-element.html
-
-<!-- -->
-
+-   [Content Provider | Android Developers][1]
+-   [Content Providerのガイド][2]
+-   [<path-permission> | Android Developers][3]
 -   [Androidアプリのセキュア設計・セキュアコーディングガイド][1]  
-    -   「4.3 Content Providerを作る・利用する」にContent
-        Providerを安全に使用するための指針や実装例が解説されています
-    -   「5.2 PermissionとProtection
-        Level」にPermissionの適切な使用方法の解説があります
+    -   「4.3 Content Providerを作る・利用する」にContent Providerを安全に使用するための指針や実装例が解説されています
+    -   「5.2 PermissionとProtection Level」にPermissionの適切な使用方法の解説があります
 
-[1]: http://www.jssec.org/dl/android\_securecoding.pdf
+[1]: https://developer.android.com/reference/android/content/ContentProvider.html
+[2]: https://developer.android.com/guide/topics/providers/content-providers.html
+[3]:  https://developer.android.com/guide/topics/manifest/path-permission-element.html
+[4]: http://www.jssec.org/dl/android\_securecoding.pdf
