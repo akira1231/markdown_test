@@ -231,7 +231,7 @@ Permission Attribute (InvalidPermission)」の項を参照してください。
 
 <!-- -->
 
--   [Androidアプリのセキュア設計・セキュアコーディングガイド](1)  
+-   [Androidアプリのセキュア設計・セキュアコーディングガイド][1]  
     -   「4.3 Content Providerを作る・利用する」にContent
         Providerを安全に使用するための指針や実装例が解説されています
     -   「5.2 PermissionとProtection
