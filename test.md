@@ -211,7 +211,7 @@ Lintは`<path-permission>`タグで`<android:permission>`は無効であると�
     -   「4.3 Content Providerを作る・利用する」にContent Providerを安全に使用するための指針や実装例が解説されています
     -   「5.2 PermissionとProtection Level」にPermissionの適切な使用方法の解説があります
 
-[test2]: test2.md
+[test2]: test2.md#title2
 
 [1]: https://developer.android.com/reference/android/content/ContentProvider.html
 [2]: https://developer.android.com/guide/topics/providers/content-providers.html
